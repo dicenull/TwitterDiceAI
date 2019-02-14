@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ListExtend.cs" />
     <Compile Include="MarkovBlock.cs" />
     <Compile Include="MarkovSentenceGenerator.cs" />
     <Compile Include="NMeCabExtend.cs" />

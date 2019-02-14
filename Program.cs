@@ -16,12 +16,20 @@ namespace TwitterDiceAI
 			{
 				DicDir = Path.Combine(AppContext.BaseDirectory, "ipadic"),
 			});
+			var generator = new MarkovSentenceGenerator();
 
-			var firstNode = mecab.ParseToNode("これはペンですか。");
-			foreach(var block in firstNode.ToEnumerable().ToBlocks())
+			string[] sentences = new[] { "これはペンですか", "これはボールでしょう", "わたしはAです" };
+
+			foreach(var sentence in sentences)
 			{
-				Console.WriteLine($"{block.Key} {block.Value} {block.Next} ");
+				var firstNode = mecab.ParseToNode(sentence);
+				foreach (var block in firstNode.ToEnumerable().ToBlocks())
+				{
+					generator.AddBlock(block);
+				}
 			}
+
+			Console.WriteLine(generator.Generate());
 		}
 	}
 }
