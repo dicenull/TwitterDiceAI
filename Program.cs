@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using NMeCab;
 using System.IO;
 using System.Configuration;
+using CoreTweet;
+using System.Diagnostics;
 
 namespace TwitterDiceAI
 {
@@ -13,21 +15,20 @@ namespace TwitterDiceAI
 	{
 		static void Main(string[] args)
 		{
-			var appSettings = ConfigurationManager.AppSettings;
-
-			Console.WriteLine(appSettings["ApiKey"]);
-
 			var mecab = MeCabTagger.Create(new MeCabParam
 			{
 				DicDir = Path.Combine(AppContext.BaseDirectory, "ipadic"),
 			});
 			var generator = new MarkovSentenceGenerator();
+			var app = new TwitterApp("dicenull");
 
-			string[] sentences = new[] { "これはペンですか", "これはボールでしょう", "わたしはAです" };
-
-			foreach(var sentence in sentences)
+			foreach(var text in app.Tweets)
 			{
-				var firstNode = mecab.ParseToNode(sentence);
+				var firstNode = mecab.ParseToNode(text);
+				if(text.Contains("http"))
+				{
+					continue;
+				}
 				foreach (var block in firstNode.ToEnumerable().ToBlocks())
 				{
 					generator.AddBlock(block);
