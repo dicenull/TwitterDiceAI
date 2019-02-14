@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NMeCab;
 using System.IO;
+using System.Configuration;
 
 namespace TwitterDiceAI
 {
@@ -12,6 +13,10 @@ namespace TwitterDiceAI
 	{
 		static void Main(string[] args)
 		{
+			var appSettings = ConfigurationManager.AppSettings;
+
+			Console.WriteLine(appSettings["ApiKey"]);
+
 			var mecab = MeCabTagger.Create(new MeCabParam
 			{
 				DicDir = Path.Combine(AppContext.BaseDirectory, "ipadic"),
@@ -28,7 +33,7 @@ namespace TwitterDiceAI
 					generator.AddBlock(block);
 				}
 			}
-
+			
 			Console.WriteLine(generator.Generate());
 		}
 	}
