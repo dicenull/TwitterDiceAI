@@ -12,6 +12,13 @@ namespace TwitterDiceAI
 		private Dictionary<int, List<MarkovBlock>> blockDatabase 
 				= new Dictionary<int, List<MarkovBlock>>();
 
+		private MeCabTagger mecab;
+
+		public MarkovSentenceGenerator(MeCabTagger mecab)
+		{
+			this.mecab = mecab;
+		}
+
 		public string Generate()
 		{
 			string sentence = "";
@@ -49,6 +56,18 @@ namespace TwitterDiceAI
 				blockDatabase[hash] = new List<MarkovBlock>();
 			}
 			blockDatabase[hash].Add(block);
+		}
+
+		public void Regist(string text)
+		{
+			var firstNode = mecab.ParseToNode(text);
+
+			if (text.Contains("http")) return;
+
+			foreach (var block in firstNode.ToEnumerable().ToBlocks())
+			{
+				AddBlock(block);
+			}
 		}
 	}
 }

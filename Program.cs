@@ -19,23 +19,12 @@ namespace TwitterDiceAI
 			{
 				DicDir = Path.Combine(AppContext.BaseDirectory, "ipadic"),
 			});
-			var generator = new MarkovSentenceGenerator();
-			var app = new TwitterApp("dicenull");
 
-			foreach(var text in app.Tweets)
-			{
-				var firstNode = mecab.ParseToNode(text);
-				if(text.Contains("http"))
-				{
-					continue;
-				}
-				foreach (var block in firstNode.ToEnumerable().ToBlocks())
-				{
-					generator.AddBlock(block);
-				}
-			}
-			
-			Console.WriteLine(generator.Generate());
+			var generator = new MarkovSentenceGenerator(mecab);
+			var app = new TwitterApp("dicenull");
+			var tweeter = new AutoTweeter(app, generator, 30);
+
+			Console.Read();
 		}
 	}
 }

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoTweeter.cs" />
     <Compile Include="ListExtend.cs" />
     <Compile Include="MarkovBlock.cs" />
     <Compile Include="MarkovSentenceGenerator.cs" />

@@ -15,7 +15,7 @@ namespace TwitterDiceAI
 	{
 		private Tokens tokens;
 		private string userName;
-
+		
 		public TwitterApp(string userName)
 		{
 			var appSettings = ConfigurationManager.AppSettings;
@@ -43,5 +43,10 @@ namespace TwitterDiceAI
 				.Select(tweet => tweet.Text); }
 		}
 		
+		public void DoTweet(string text)
+		{
+			Console.WriteLine($"tweet : {text}");
+			tokens.Statuses.Update(new { status = text });
+		}
 	}
 }
