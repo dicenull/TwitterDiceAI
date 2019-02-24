@@ -9,8 +9,7 @@ namespace TwitterDiceAI
 {
 	class MarkovSentenceGenerator
 	{
-		private Dictionary<int, List<MarkovBlock>> blockDatabase 
-				= new Dictionary<int, List<MarkovBlock>>();
+		private List<MarkovBlock> blockDatabase = new List<MarkovBlock>();
 
 		private MeCabTagger mecab;
 
@@ -23,19 +22,19 @@ namespace TwitterDiceAI
 		{
 			string sentence = "";
 
-			int hash = 0;
-			
-			while (blockDatabase.ContainsKey(hash))
+            var blocks = blockDatabase.Where(block => block.Key == null).ToList();
+            
+			while (blocks != null)
 			{
-				var block = blockDatabase[hash].RandomSelect();
-				sentence += block.Value + block.Next;
+				var blockWord = blocks.RandomSelect();
+				sentence += blockWord.Value + blockWord.Next;
 
-				if(block.Next == null)
-				{
-					break;
-				}
+                if(blockWord.Next == null)
+                {
+                    break;
+                }
 
-				hash = block.Next.GetHashCode();
+                blocks = blocks.Where(block => block.Key == blockWord.Next).ToList();
 			}
 
 			return sentence;
@@ -43,25 +42,14 @@ namespace TwitterDiceAI
 
 		public void AddBlock(MarkovBlock block)
 		{
-			var hash = 0;
-			if (block.Key != null)
-			{
-				hash = block.Key.GetHashCode();
-
-				if (hash == 0) hash = 1;
-			}
-
-			if (!blockDatabase.ContainsKey(hash))
-			{
-				blockDatabase[hash] = new List<MarkovBlock>();
-			}
-			blockDatabase[hash].Add(block);
+            blockDatabase.Add(block);
 		}
 
 		public void Regist(string text)
 		{
 			var firstNode = mecab.ParseToNode(text);
 
+            // リンクや画像つきツイートを除外
 			if (text.Contains("http")) return;
 
 			foreach (var block in firstNode.ToEnumerable().ToBlocks())

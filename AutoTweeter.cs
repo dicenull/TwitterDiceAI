@@ -11,7 +11,9 @@ namespace TwitterDiceAI
 	{
 		TwitterApp app;
 		MarkovSentenceGenerator generator;
+        
 
+        /// <param name="interval">投稿間隔</param>
 		public AutoTweeter(TwitterApp app, MarkovSentenceGenerator generator, int interval)
 		{
 			this.app = app;
@@ -26,9 +28,12 @@ namespace TwitterDiceAI
 			app.DoTweet(generator.Generate());
 		}
 
+        /// <summary>
+        /// 文章ジェネレータに過去のツイートを登録する
+        /// </summary>
 		private void registerFirstTweets()
 		{
-			foreach (var text in app.Tweets)
+			foreach (var text in app.GetTweets(100))
 			{
 				generator.Regist(text);
 			}

@@ -32,15 +32,15 @@ namespace TwitterDiceAI
 			this.userName = userName;
 		}
 		
-		public IEnumerable<string> Tweets
+		public IEnumerable<string> GetTweets(int count)
 		{
-			get { return tokens.Statuses.UserTimeline(
+			return tokens.Statuses.UserTimeline(
 				new {
 					screen_name = userName,
-					count = 100,
+					count = count,
 					exclude_replies = true,
 					include_rts = false })
-				.Select(tweet => tweet.Text); }
+				.Select(tweet => tweet.Text);
 		}
 		
 		public void DoTweet(string text)
